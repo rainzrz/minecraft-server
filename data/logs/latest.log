@@ -1,37 +1,28 @@
-[00:09:32] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, name=PROD]
-[00:09:35] [ServerMain/INFO]: Loaded 1373 recipes
-[00:09:35] [ServerMain/INFO]: Loaded 1484 advancements
-[00:09:35] [Server thread/INFO]: Starting minecraft server version 1.21.5
-[00:09:35] [Server thread/INFO]: Loading properties
-[00:09:35] [Server thread/INFO]: Default game type: SURVIVAL
-[00:09:35] [Server thread/INFO]: Generating keypair
-[00:09:35] [Server thread/INFO]: Starting Minecraft server on *:25565
-[00:09:35] [Server thread/INFO]: Using epoll channel type
-[00:09:35] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
-[00:09:35] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
-[00:09:35] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
-[00:09:35] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
-[00:09:35] [Server thread/INFO]: Preparing level "world"
-[00:09:36] [Server thread/INFO]: Preparing start region for dimension minecraft:overworld
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Worker-Main-1/INFO]: Preparing spawn area: 0%
-[00:09:41] [Server thread/INFO]: Time elapsed: 5644 ms
-[00:09:41] [Server thread/INFO]: Done (6.023s)! For help, type "help"
-[00:09:41] [Server thread/INFO]: Starting remote control listener
-[00:09:41] [Server thread/INFO]: Thread RCON Listener started
-[00:09:41] [Server thread/INFO]: RCON running on 0.0.0.0:25575
-[00:10:01] [Server thread/INFO]: rainzrz[/26.229.60.71:50458] logged in with entity id 14 at (14.5, 69.0, 8.5)
-[00:10:01] [Server thread/INFO]: rainzrz joined the game
-[00:10:47] [Server thread/INFO]: rainzrz lost connection: Disconnected
-[00:10:47] [Server thread/INFO]: rainzrz left the game
-[00:11:47] [Server thread/INFO]: Server empty for 60 seconds, pausing
+[04:03:17] [ServerMain/INFO]: Environment: Environment[sessionHost=https://sessionserver.mojang.com, servicesHost=https://api.minecraftservices.com, profilesHost=https://api.mojang.com, name=PROD]
+[04:03:18] [ServerMain/WARN]: Missing data pack fabric
+[04:03:18] [ServerMain/INFO]: Loaded 1461 recipes
+[04:03:18] [ServerMain/INFO]: Loaded 1574 advancements
+[04:03:18] [Server thread/INFO]: Starting minecraft server version 1.21.10
+[04:03:18] [Server thread/INFO]: Loading properties
+[04:03:18] [Server thread/INFO]: Default game type: SURVIVAL
+[04:03:18] [Server thread/INFO]: Generating keypair
+[04:03:19] [Server thread/INFO]: Starting Minecraft server on *:25565
+[04:03:19] [Server thread/INFO]: Using epoll channel type
+[04:03:19] [Server thread/WARN]: **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[04:03:19] [Server thread/WARN]: The server will make no attempt to authenticate usernames. Beware.
+[04:03:19] [Server thread/WARN]: While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[04:03:19] [Server thread/WARN]: To change this, set "online-mode" to "true" in the server.properties file.
+[04:03:19] [Server thread/INFO]: Preparing level "world"
+[04:03:19] [Server thread/INFO]: Loading 0 persistent chunks...
+[04:03:19] [Server thread/INFO]: Preparing spawn area: 100%
+[04:03:19] [Server thread/INFO]: Time elapsed: 14 ms
+[04:03:19] [Server thread/INFO]: Done (0.220s)! For help, type "help"
+[04:03:19] [Server thread/INFO]: Starting remote control listener
+[04:03:19] [Server thread/INFO]: Thread RCON Listener started
+[04:03:19] [Server thread/INFO]: RCON running on 0.0.0.0:25575
+[04:03:49] [Server thread/INFO]: rainzrz[/192.168.1.12:61472] logged in with entity id 2 at (416.5, 76.0, 151.5)
+[04:03:49] [Server thread/INFO]: rainzrz joined the game
+[04:03:58] [Server thread/INFO]: [rainzrz: Set own game mode to Creative Mode]
+[04:07:21] [Server thread/INFO]: rainzrz lost connection: Disconnected
+[04:07:21] [Server thread/INFO]: rainzrz left the game
+[04:08:21] [Server thread/INFO]: Server empty for 60 seconds, pausing

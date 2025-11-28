@@ -2,14 +2,14 @@ version: "3.8"
 services:
   mc_frosthold:
     image: itzg/minecraft-server
-    container_name: mc_frosthold
+    container_name: frosthold
     ports:
       - "25565:25565"
     environment:
       EULA: "TRUE"
-      MEMORY: "2G"
+      MEMORY: "10G"
       VERSION: "LATEST"
-      LEVEL_NAME: "frosthold"
+      LEVEL_NAME: "world"
     volumes:
       - ./data:/data
       - ./logs:/logs
