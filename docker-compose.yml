@@ -1,17 +1,19 @@
-version: "3.8"
 services:
   mc_frosthold:
     image: itzg/minecraft-server
     container_name: frosthold
     ports:
-      - "25565:25565"
+      - "25565:25565"   # Porta do Minecraft
+      - "25575:25575"   # Porta RCON
     environment:
+      TYPE: PAPER
       EULA: "TRUE"
       MEMORY: "10G"
       VERSION: "LATEST"
       LEVEL_NAME: "world"
+      ENABLE_RCON: "true"
+      RCON_PASSWORD: "G7r$8vPq!2xZt9Lw"
     volumes:
       - ./data:/data
       - ./logs:/logs
     restart: unless-stopped
-
