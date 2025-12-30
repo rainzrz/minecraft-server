@@ -1,4 +1,4 @@
-# Frosthold - Servidor Minecraft com Docker
+# Servidor Minecraft com Docker
 
 Projeto para facilitar a criação e gerenciamento de um servidor Minecraft dentro de um container Docker, com scripts para iniciar, reiniciar e fazer backups automáticos do servidor.
 
