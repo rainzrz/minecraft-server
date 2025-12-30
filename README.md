@@ -1,14 +1,3 @@
-┌────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│ █▀▄ █ █   █▀▄ █▀█ ▀█▀ █▀█ ▀▀█			  																			│
-│ █▀▄  █    █▀▄ █▀█  █  █ █ ▄▀ 			   																			│
-│ ▀▀   ▀    ▀ ▀ ▀ ▀ ▀▀▀ ▀ ▀ ▀▀▀ 			 																			│
-│ "It's dangerous to go alone. Take this." 																			│
-│																													│
-│ Date: 27/12/2025 																									│
-│ Project: Terrablade 																								│
-│ Description: Responsible for dropping the weapon to the ground when the player requests the action via RemoteEvent.│
-└────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-
 # Frosthold - Servidor Minecraft com Docker
 
 Projeto para facilitar a criação e gerenciamento de um servidor Minecraft dentro de um container Docker, com scripts para iniciar, reiniciar e fazer backups automáticos do servidor.
