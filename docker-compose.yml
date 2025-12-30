@@ -1,7 +1,7 @@
 services:
-  mc_frosthold:
+  minecraft-server:
     image: itzg/minecraft-server
-    container_name: frosthold
+    container_name: minecraft-server
     ports:
       - "25565:25565"   # Porta do Minecraft
       - "25575:25575"   # Porta RCON

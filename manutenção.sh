@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Nome do container
-CONTAINER_NAME="frosthold"
+CONTAINER_NAME="minecraft-server"
 
 # Cores
 RED="\033[38;5;161m"
@@ -14,7 +14,7 @@ NC="\033[38;5;15m" # Sem cor
 while true; do
     clear
     echo -e "${CYAN}======================================${NC}"
-    echo -e "${CYAN}     Painel de Controle Frosthold     ${NC}"
+    echo -e "${CYAN}     Painel de Controle Servidor     ${NC}"
     echo -e "${CYAN}======================================${NC}"
     echo -e "${GREEN}1) Iniciar servidor${NC}"
     echo -e "${RED}2) Parar servidor${NC}"
