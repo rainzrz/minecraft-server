@@ -28,7 +28,7 @@
 - **Servidor Minecraft Paper** - Performance otimizada
 - **Docker Compose** - Deploy simples e rápido
 - **Monitoramento Completo** - Prometheus + Grafana
-- **Backups Automáticos** - Scripts prontos para uso
+- **Painel de Manutenção** - Script interativo para gerenciar o servidor
 - **RCON Habilitado** - Controle remoto do servidor
 - **Persistência de Dados** - Volumes Docker configurados
 
@@ -45,9 +45,7 @@ minecraft-server/
 ├── prometheus/               # Configurações do Prometheus
 │   ├── prometheus.yml       # Config do Prometheus
 │   └── GRAFANA_SETUP.md     # Guia de setup do Grafana
-├── start.sh                  # Script para iniciar
-├── restart.sh                # Script para reiniciar
-├── backup.sh                 # Script de backup
+├── manutenção.sh             # Painel de controle do servidor
 └── README.md                 # Este arquivo
 ```
 
@@ -70,50 +68,42 @@ minecraft-server/
 
 ## Como Usar
 
-### Iniciar o Servidor
+### Painel de Manutenção (Recomendado)
+
+O script `manutenção.sh` oferece um painel interativo para gerenciar o servidor:
 
 ```bash
-./start.sh
+./manutenção.sh
 ```
 
-ou usando Docker Compose diretamente:
+O painel oferece as seguintes opções:
+
+1. **Iniciar servidor** - Inicia todos os serviços (Minecraft, Prometheus, Grafana)
+2. **Parar servidor** - Para todos os serviços
+3. **Reiniciar servidor** - Reinicia todos os serviços
+4. **Ver logs do servidor** - Exibe os logs do servidor Minecraft
+5. **Fazer backup do mundo** - Cria um backup do mundo com timestamp
+6. **Sair** - Encerra o painel
+
+### Comandos Docker Compose (Alternativa)
+
+Você também pode usar os comandos Docker Compose diretamente:
 
 ```bash
+# Iniciar todos os serviços
 docker compose up -d
-```
 
-### Reiniciar o Servidor
+# Parar todos os serviços
+docker compose down
 
-```bash
-./restart.sh
-```
-
-ou:
-
-```bash
+# Reiniciar todos os serviços
 docker compose restart
-```
 
-### Criar Backup Manual
-
-```bash
-./backup.sh
-```
-
-### Ver Logs
-
-```bash
-# Logs de todos os serviços
+# Ver logs de todos os serviços
 docker compose logs -f
 
-# Logs apenas do servidor Minecraft
+# Ver logs apenas do servidor Minecraft
 docker compose logs -f minecraft-server
-```
-
-### Parar o Servidor
-
-```bash
-docker compose down
 ```
 
 ---
