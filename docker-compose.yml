@@ -21,14 +21,14 @@ services:
       - minecraft-monitoring
 
   minecraft-exporter:
-    image: itzg/minecraft-exporter
+    image: dirien/minecraft-prometheus-exporter:latest
     container_name: minecraft-exporter
     ports:
       - "9225:9225"   # Porta do exporter
     environment:
-      MINECRAFT_EXPORTER_RCON_HOST: "minecraft-server"
-      MINECRAFT_EXPORTER_RCON_PORT: "25575"
-      MINECRAFT_EXPORTER_RCON_PASSWORD: "G7r$8vPq!2xZt9Lw"
+      RCON_HOST: "minecraft-server"
+      RCON_PORT: "25575"
+      RCON_PASSWORD: "G7r$8vPq!2xZt9Lw"
     depends_on:
       - minecraft-server
     restart: unless-stopped
