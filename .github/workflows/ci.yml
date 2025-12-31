@@ -85,10 +85,6 @@ jobs:
   security-scan:
     name: Análise de Segurança
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
     
     steps:
       - name: Checkout código
@@ -103,8 +99,7 @@ jobs:
           output: 'trivy-results.sarif'
       
       - name: Upload resultado do Trivy
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: 'trivy-results.sarif'
   
