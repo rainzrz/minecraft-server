@@ -9,7 +9,7 @@
 
 ---
 
-## Índicee
+## Índice
 
 - [Características](#características)
 - [Estrutura do Projeto](#estrutura-do-projeto)
