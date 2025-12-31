@@ -1,6 +1,7 @@
 *.jar
 /backups/
 /logs/
+/data/*
 !data/whitelist.json
 !data/server.properties
 
