@@ -1,0 +1,130 @@
+name: CD - Continuous Deployment
+
+on:
+  push:
+    branches: [ main, master ]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Ambiente de deploy'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - staging
+
+env:
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  deploy:
+    name: Deploy para Servidor
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+      - name: Validar configuração antes do deploy
+        run: |
+          docker-compose config > /dev/null
+          echo "✅ Configuração válida"
+      
+      - name: Deploy para servidor
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/home/rainz/minecraft-server' }}
+        run: |
+          # Criar script de deploy inline
+          cat > deploy.sh << 'DEPLOY_SCRIPT'
+          #!/bin/bash
+          set -e
+          
+          echo "🚀 Iniciando deploy..."
+          
+          # Ir para o diretório do projeto
+          cd $DEPLOY_PATH || exit 1
+          
+          # Backup do docker-compose atual
+          if [ -f docker-compose.yml ]; then
+            cp docker-compose.yml docker-compose.yml.backup.$(date +%Y%m%d_%H%M%S)
+          fi
+          
+          # Git pull
+          echo "📥 Atualizando código..."
+          git fetch origin
+          git reset --hard origin/main 2>/dev/null || git reset --hard origin/master
+          
+          # Tornar scripts executáveis
+          chmod +x manutenção.sh scripts/*.sh tests/**/*.sh 2>/dev/null || true
+          
+          # Validar docker-compose
+          echo "✔️ Validando configuração..."
+          docker compose config > /dev/null
+          
+          # Atualizar containers (sem downtime se possível)
+          echo "🔄 Atualizando containers..."
+          docker compose pull
+          docker compose up -d
+          
+          # Aguardar containers iniciarem
+          sleep 10
+          
+          # Verificar saúde dos containers
+          echo "🏥 Verificando saúde dos containers..."
+          if docker compose ps | grep -q "Up"; then
+            echo "✅ Deploy concluído com sucesso!"
+            docker compose ps
+          else
+            echo "❌ Erro: Alguns containers não iniciaram"
+            docker compose ps
+            # Restaurar backup se disponível
+            if [ -f docker-compose.yml.backup.* ]; then
+              echo "🔄 Tentando restaurar backup..."
+              RESTORE_FILE=$(ls -t docker-compose.yml.backup.* | head -1)
+              cp "$RESTORE_FILE" docker-compose.yml
+              docker compose up -d
+            fi
+            exit 1
+          fi
+          DEPLOY_SCRIPT
+          
+          # Executar deploy no servidor remoto
+          ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SSH_HOST} \
+            "DEPLOY_PATH=${DEPLOY_PATH} bash -s" < deploy.sh
+      
+      - name: Verificar deploy
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH || '/home/rainz/minecraft-server' }}
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${SSH_PORT} ${SSH_USER}@${SSH_HOST} \
+            "cd ${DEPLOY_PATH} && docker compose ps"
+      
+      - name: Notificação de sucesso
+        if: success()
+        run: |
+          echo "✅ Deploy concluído com sucesso em $(date)"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+      
+      - name: Notificação de falha
+        if: failure()
+        run: |
+          echo "❌ Deploy falhou em $(date)"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"

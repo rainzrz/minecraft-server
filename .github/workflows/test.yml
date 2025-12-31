@@ -1,0 +1,36 @@
+name: Testes Completos
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Suite Completa de Testes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Configurar Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+      
+      - name: Executar todos os testes
+        run: |
+          chmod +x scripts/run_tests.sh tests/**/*.sh
+          bash scripts/run_tests.sh
+      
+      - name: Upload logs em caso de falha
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs
+          path: |
+            *.log
+            docker-compose.log

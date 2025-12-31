@@ -1,0 +1,117 @@
+name: CI - Continuous Integration
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  lint-and-validate:
+    name: Lint e Validação
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Instalar Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+      
+      - name: Validar docker-compose.yml
+        run: |
+          docker-compose config
+      
+      - name: Validar YAML files
+        uses: actionshub/yamllint@main
+        with:
+          file_or_dir: docker-compose.yml prometheus/
+          config_file: .yamllint.yml || echo "skip"
+      
+      - name: Tornar scripts executáveis
+        run: |
+          chmod +x tests/**/*.sh scripts/*.sh manutenção.sh 2>/dev/null || true
+          find . -name "*.sh" -type f -exec chmod +x {} \;
+  
+  unit-tests:
+    name: Testes Unitários
+    runs-on: ubuntu-latest
+    needs: lint-and-validate
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Instalar Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+      
+      - name: Executar testes unitários
+        run: |
+          chmod +x tests/unit/*.sh
+          bash tests/unit/test_docker_compose.sh
+          bash tests/unit/test_prometheus_config.sh
+  
+  integration-tests:
+    name: Testes de Integração
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Instalar Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose --version
+      
+      - name: Executar testes de integração
+        run: |
+          chmod +x tests/integration/*.sh
+          export SKIP_INTEGRATION=false
+          bash tests/integration/test_containers.sh
+      
+      - name: Limpar containers
+        if: always()
+        run: |
+          docker-compose -p minecraft-test down -v || true
+  
+  security-scan:
+    name: Análise de Segurança
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+      
+      - name: Executar Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'config'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload resultado do Trivy
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+  
+  summary:
+    name: Resumo
+    runs-on: ubuntu-latest
+    needs: [lint-and-validate, unit-tests, integration-tests]
+    if: always()
+    
+    steps:
+      - name: Status dos testes
+        run: |
+          echo "✅ Lint e Validação: ${{ needs.lint-and-validate.result }}"
+          echo "✅ Testes Unitários: ${{ needs.unit-tests.result }}"
+          echo "✅ Testes de Integração: ${{ needs.integration-tests.result }}"
