@@ -18,7 +18,6 @@
 - [Conexão](#conexão)
 - [Monitoramento](#monitoramento)
 - [Observações](#observações)
-- [Contribuindo](#contribuindo)
 - [Licença](#licença)
 
 ---
@@ -58,7 +57,7 @@ minecraft-server/
 | **Docker** | Docker Engine ou Docker Desktop instalado |
 | **Docker Compose** | Versão 2.0+ (já incluído no Docker Desktop) |
 | **Sistema Operacional** | Linux, Windows ou macOS |
-| **Portas Disponíveis** | 25565, 25575, 9090, 3000, 9225 |
+| **Portas Disponíveis** | 25565, 25575, 9090, 3000 |
 | **Espaço em Disco** | Mínimo 10GB livres (recomendado 20GB+) |
 | **RAM** | Mínimo 4GB (recomendado 8GB+ para servidor) |
 
@@ -154,9 +153,126 @@ O Prometheus está configurado e pronto para coletar métricas. Para coletar mé
 
 > Veja instruções detalhadas em [prometheus/GRAFANA_SETUP.md](prometheus/GRAFANA_SETUP.md)
 
-### Nota sobre Métricas do Minecraft
+### Coletar Métricas
 
-Atualmente, o projeto inclui Prometheus e Grafana configurados. Para coletar métricas específicas do servidor Minecraft (como jogadores online, TPS, uso de memória, etc.), você precisará adicionar um exporter compatível. O exporter pode ser adicionado posteriormente ao `docker-compose.yml` quando uma imagem confiável estiver disponível.
+Com Prometheus e Grafana configurados, você pode coletar diversos tipos de métricas. Aqui estão as principais opções:
+
+#### 1. Métricas do Prometheus (Incluídas)
+
+O próprio Prometheus expõe métricas sobre seu funcionamento:
+
+- **Query Performance** - `prometheus_engine_*`
+- **Storage** - `prometheus_tsdb_*`
+- **HTTP Requests** - `prometheus_http_*`
+- **Target Scrapes** - `prometheus_target_*`
+
+Para visualizar: Acesse http://localhost:9090/metrics
+
+#### 2. Métricas do Docker (cAdvisor)
+
+Adicione o cAdvisor para monitorar containers Docker:
+
+Adicione ao `docker-compose.yml`:
+
+```yaml
+cadvisor:
+  image: gcr.io/cadvisor/cadvisor:latest
+  container_name: cadvisor
+  ports:
+    - "8080:8080"
+  volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:ro
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+  restart: unless-stopped
+  networks:
+    - minecraft-monitoring
+```
+
+Depois adicione ao `prometheus/prometheus.yml`:
+
+```yaml
+scrape_configs:
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+```
+
+**Métricas coletadas:**
+- Uso de CPU por container
+- Uso de memória por container
+- Uso de disco
+- Tráfego de rede
+- Uptime dos containers
+
+#### 3. Métricas do Sistema (Node Exporter)
+
+Para métricas do sistema operacional (CPU, memória, disco, rede do host):
+
+Adicione ao `docker-compose.yml`:
+
+```yaml
+node-exporter:
+  image: prom/node-exporter:latest
+  container_name: node-exporter
+  ports:
+    - "9100:9100"
+  command:
+    - '--path.procfs=/host/proc'
+    - '--path.rootfs=/rootfs'
+    - '--path.sysfs=/host/sys'
+    - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+  volumes:
+    - /proc:/host/proc:ro
+    - /sys:/host/sys:ro
+    - /:/rootfs:ro
+  restart: unless-stopped
+  networks:
+    - minecraft-monitoring
+```
+
+Adicione ao `prometheus/prometheus.yml`:
+
+```yaml
+scrape_configs:
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+```
+
+**Métricas coletadas:**
+- CPU usage (percentual por core)
+- Memória total e disponível
+- Uso de disco e I/O
+- Tráfego de rede
+- Temperatura (se disponível)
+- System load
+
+#### 4. Métricas do Minecraft Server
+
+Para métricas específicas do Minecraft (jogadores, TPS, chunks), você precisará de um exporter compatível. Algumas opções:
+
+- **Plugins do Minecraft**: Instale plugins como "Prometheus Exporter" no servidor Paper
+- **Exporters externos**: Procure por imagens Docker que se conectem via RCON
+
+#### Como Adicionar um Exporter
+
+1. Adicione o serviço ao `docker-compose.yml`
+2. Adicione a configuração de scrape ao `prometheus/prometheus.yml`
+3. Reinicie os serviços: `docker compose restart`
+4. Verifique se as métricas aparecem em: http://localhost:9090/targets
+5. No Grafana, crie dashboards usando as métricas disponíveis
+
+#### Dashboards Recomendados
+
+No Grafana, você pode importar dashboards prontos:
+
+- **Node Exporter Full** - ID: `1860` (métricas do sistema)
+- **Docker Monitoring** - ID: `893` (métricas de containers)
+- **Prometheus Stats** - ID: `2` (métricas do Prometheus)
+
+Para importar: Grafana → Dashboards → Import → Digite o ID
 
 ---
 
@@ -181,18 +297,6 @@ Estes arquivos são **versionados** para manter configurações sincronizadas:
 - **RCON Password**: Altere a senha RCON no `docker-compose.yml` antes de usar em produção
 - **Grafana Password**: Altere a senha padrão do Grafana no primeiro acesso
 - **Firewall**: Configure o firewall adequadamente para expor apenas as portas necessárias
-
----
-
-## Contribuindo
-
-Contribuições são muito bem-vindas!
-
-1. Faça um Fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
 
 ---
 
