@@ -17,3 +17,62 @@ services:
       - ./data:/data
       - ./logs:/logs
     restart: unless-stopped
+    networks:
+      - minecraft-monitoring
+
+  minecraft-exporter:
+    image: itzg/minecraft-exporter
+    container_name: minecraft-exporter
+    ports:
+      - "9225:9225"   # Porta do exporter
+    environment:
+      MINECRAFT_EXPORTER_RCON_HOST: "minecraft-server"
+      MINECRAFT_EXPORTER_RCON_PORT: "25575"
+      MINECRAFT_EXPORTER_RCON_PASSWORD: "G7r$8vPq!2xZt9Lw"
+    depends_on:
+      - minecraft-server
+    restart: unless-stopped
+    networks:
+      - minecraft-monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"   # Porta do Prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    restart: unless-stopped
+    networks:
+      - minecraft-monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"   # Porta do Grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    networks:
+      - minecraft-monitoring
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  minecraft-monitoring:
+    driver: bridge
