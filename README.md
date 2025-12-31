@@ -17,7 +17,6 @@
 - [Como Usar](#como-usar)
 - [Conexão](#conexão)
 - [Monitoramento](#monitoramento)
-- [Observações](#observações)
 - [Licença](#licença)
 
 ---
@@ -135,10 +134,6 @@ O projeto inclui um stack completo de monitoramento com **Prometheus** e **Grafa
 | **Prometheus** | http://localhost:9090 | - |
 
 > **Importante**: Altere a senha do Grafana no primeiro login!
-
-### Configuração do Prometheus
-
-O Prometheus está configurado e pronto para coletar métricas. Para coletar métricas específicas do Minecraft, você precisará adicionar um exporter compatível.
 
 ### Adicionar Dashboard no Grafana
 
@@ -273,30 +268,6 @@ No Grafana, você pode importar dashboards prontos:
 - **Prometheus Stats** - ID: `2` (métricas do Prometheus)
 
 Para importar: Grafana → Dashboards → Import → Digite o ID
-
----
-
-## Observações
-
-### Arquivos Ignorados
-
-Os seguintes arquivos são **ignorados** no Git:
-- `*.jar` - Arquivos JAR do servidor
-- `/backups/` - Diretório de backups
-- `/logs/` - Logs do servidor
-- `/data/*` - Dados do servidor (exceto configurações)
-
-### Arquivos Versionados
-
-Estes arquivos são **versionados** para manter configurações sincronizadas:
-- `data/whitelist.json` - Lista de permissões
-- `data/server.properties` - Propriedades do servidor
-
-### Segurança
-
-- **RCON Password**: Altere a senha RCON no `docker-compose.yml` antes de usar em produção
-- **Grafana Password**: Altere a senha padrão do Grafana no primeiro acesso
-- **Firewall**: Configure o firewall adequadamente para expor apenas as portas necessárias
 
 ---
 
