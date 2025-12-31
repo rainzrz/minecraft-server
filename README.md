@@ -134,13 +134,12 @@ O projeto inclui um stack completo de monitoramento com **Prometheus** e **Grafa
 |---------|-----|-------------|
 | **Grafana** | http://localhost:3000 | `admin` / `admin` |
 | **Prometheus** | http://localhost:9090 | - |
-| **Minecraft Exporter** | http://localhost:9225/metrics | - |
 
 > **Importante**: Altere a senha do Grafana no primeiro login!
 
 ### Configuração do Prometheus
 
-O Prometheus está configurado para coletar métricas do servidor Minecraft através do **Minecraft Exporter**, que se conecta via RCON.
+O Prometheus está configurado e pronto para coletar métricas. Para coletar métricas específicas do Minecraft, você precisará adicionar um exporter compatível.
 
 ### Adicionar Dashboard no Grafana
 
@@ -151,24 +150,13 @@ O Prometheus está configurado para coletar métricas do servidor Minecraft atra
 5. Configure:
    - **URL**: `http://prometheus:9090`
    - Clique em **Save & Test**
-6. Importe um dashboard do Minecraft:
-   - Vá em **Dashboards** → **Import**
-   - Digite o ID: `21724` (Minecraft Server Dashboard)
-   - Selecione o Data Source do Prometheus
-   - Clique em **Import**
+6. Crie dashboards personalizados ou importe dashboards existentes do Grafana
 
 > Veja instruções detalhadas em [prometheus/GRAFANA_SETUP.md](prometheus/GRAFANA_SETUP.md)
 
-### Métricas Coletadas
+### Nota sobre Métricas do Minecraft
 
-O exporter coleta diversas métricas importantes:
-
-- **Jogadores Online** - Número de jogadores conectados
-- **TPS (Ticks Per Second)** - Performance do servidor
-- **Uso de Memória** - RAM utilizada pelo servidor
-- **Chunks Carregados** - Quantidade de chunks na memória
-- **Status do Servidor** - Estado e informações gerais
-- **Estatísticas do Mundo** - Informações do mundo atual
+Atualmente, o projeto inclui Prometheus e Grafana configurados. Para coletar métricas específicas do servidor Minecraft (como jogadores online, TPS, uso de memória, etc.), você precisará adicionar um exporter compatível. O exporter pode ser adicionado posteriormente ao `docker-compose.yml` quando uma imagem confiável estiver disponível.
 
 ---
 
