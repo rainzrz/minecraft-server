@@ -27,5 +27,5 @@ jobs:
 
     - name: Run tests
       run: |
-        python data/test_example.py
-        python data/test_sample.py
+        python $(pwd)/data/test_example.py
+        python $(pwd)/data/test_sample.py
