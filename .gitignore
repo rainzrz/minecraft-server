@@ -5,19 +5,3 @@
 !data/whitelist.json
 !data/server.properties
 
-# Testes
-*.log
-docker-compose.yml.backup.*
-.trivy-cache/
-*.sarif
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db

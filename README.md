@@ -17,7 +17,6 @@
 - [Como Usar](#como-usar)
 - [Conexão](#conexão)
 - [Monitoramento](#monitoramento)
-- [CI/CD e Testes](#cicd-e-testes)
 - [Licença](#licença)
 
 ---
@@ -44,16 +43,7 @@ minecraft-server/
 ├── prometheus/               # Configurações do Prometheus
 │   ├── prometheus.yml       # Config do Prometheus
 │   └── GRAFANA_SETUP.md     # Guia de setup do Grafana
-├── .github/workflows/        # CI/CD com GitHub Actions
-│   ├── ci.yml               # Continuous Integration
-│   ├── cd.yml               # Continuous Deployment
-│   └── test.yml             # Suite de testes
-├── tests/                    # Testes automatizados
-│   ├── unit/                # Testes unitários
-│   └── integration/         # Testes de integração
-├── scripts/                  # Scripts auxiliares
 ├── manutenção.sh             # Painel de controle do servidor
-├── Makefile                  # Comandos Make
 └── README.md                 # Este arquivo
 ```
 
